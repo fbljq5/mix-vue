@@ -84,10 +84,11 @@ export const useUserStore = defineStore({
       try {
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
-        const { token } = data;
-
+        const  {token}  = data;
         // save token
         this.setToken(token);
+
+        alert(token)
         // get user info
         const userInfo = await this.getUserInfoAction();
 
@@ -101,10 +102,10 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction() {
       const userInfo = await getUserInfo();
-      const { roles } = userInfo;
-      const roleList = roles.map((item) => item.value) as RoleEnum[];
+      // const { roles } = userInfo;
+      // const roleList = roles.map((item) => item.value) as RoleEnum[];
       this.setUserInfo(userInfo);
-      this.setRoleList(roleList);
+      // this.setRoleList(roleList);
       return userInfo;
     },
     /**

@@ -1,5 +1,5 @@
 // token key
-export const TOKEN_KEY = 'TOKEN__';
+export const TOKEN_KEY = 'mix-token';
 
 export const LOCALE_KEY = 'LOCALE__';
 

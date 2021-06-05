@@ -4,8 +4,8 @@ import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userMod
 import { ErrorMessageMode } from '/@/utils/http/axios/types';
 
 enum Api {
-  Login = '/login',
-  GetUserInfo = '/getUserInfo',
+  Login = '/mix-auth/auth/login',
+  GetUserInfo = '/mix-admin/user/info',
   GetPermCode = '/getPermCode',
 }
 
