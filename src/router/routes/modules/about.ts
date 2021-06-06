@@ -25,4 +25,4 @@ const dashboard: AppRouteModule = {
   ],
 };
 
-export default dashboard;
+// export default dashboard;

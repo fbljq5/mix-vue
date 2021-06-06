@@ -7,18 +7,18 @@ const menu: MenuModule = {
     name: t('routes.demo.iframe.frame'),
     path: '/frame',
     children: [
-      {
-        path: 'doc',
-        name: t('routes.demo.iframe.doc'),
-      },
-      {
-        path: 'antv',
-        name: t('routes.demo.iframe.antv'),
-      },
-      {
-        path: 'https://vvbin.cn/doc-next/',
-        name: t('routes.demo.iframe.docExternal'),
-      },
+      // {
+      //   path: 'doc',
+      //   name: t('routes.demo.iframe.doc'),
+      // },
+      // {
+      //   path: 'antv',
+      //   name: t('routes.demo.iframe.antv'),
+      // },
+      // {
+      //   path: 'https://vvbin.cn/doc-next/',
+      //   name: t('routes.demo.iframe.docExternal'),
+      // },
     ],
   },
 };

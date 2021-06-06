@@ -8,25 +8,40 @@ const menu: MenuModule = {
     path: '/system',
     children: [
       {
-        path: 'account',
-        name: t('routes.demo.system.account'),
+        path: 'front',
+        name: t('routes.demo.permission.front'),
+        children: [
+          {
+            path: 'page',
+            name: t('routes.demo.permission.frontPage'),
+          },
+          {
+            path: 'btn',
+            name: t('routes.demo.permission.frontBtn'),
+          },
+          {
+            path: 'auth-pageA',
+            name: t('routes.demo.permission.frontTestA'),
+          },
+          {
+            path: 'auth-pageB',
+            name: t('routes.demo.permission.frontTestB'),
+          },
+        ],
       },
       {
-        path: 'role',
-        name: t('routes.demo.system.role'),
-      },
-      {
-        path: 'menu',
-        name: t('routes.demo.system.menu'),
-      },
-      {
-        path: 'dept',
-        name: t('routes.demo.system.dept'),
-      },
-
-      {
-        path: 'changePassword',
-        name: t('routes.demo.system.password'),
+        path: 'back',
+        name: t('routes.demo.permission.back'),
+        children: [
+          {
+            path: 'page',
+            name: t('routes.demo.permission.backPage'),
+          },
+          {
+            path: 'btn',
+            name: t('routes.demo.permission.backBtn'),
+          },
+        ],
       },
     ],
   },

@@ -64,4 +64,4 @@ const permission: AppRouteModule = {
   ],
 };
 
-export default permission;
+// export default permission;

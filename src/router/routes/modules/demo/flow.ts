@@ -24,4 +24,4 @@ const charts: AppRouteModule = {
   ],
 };
 
-export default charts;
+// export default charts;
