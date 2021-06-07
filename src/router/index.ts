@@ -1,33 +1,85 @@
-import type { RouteRecordRaw } from 'vue-router';
-import type { App } from 'vue';
+import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
+import {checkToken} from '@/api/admin/user'
+import Login from '@/views/login/index.vue'
+import Dashboard from '@/views/dashboard/index.vue'
+import Layout from '@/components/layout/layout.vue'
+import User from '@/views/admin/user.vue'
+import Role from '@/views/admin/role.vue'
+import Menu from '@/views/admin/menu.vue'
 
-import { createRouter, createWebHashHistory } from 'vue-router';
-import { basicRoutes, LoginRoute } from './routes';
-import { REDIRECT_NAME } from './constant';
+const routes: Array<RouteRecordRaw> = [
 
-const WHITE_NAME_LIST = [LoginRoute.name, REDIRECT_NAME];
+    {
+        path: '/login',
+        name: 'login',
+        component: Login,
+        meta: {title: '登录'}
+    },
 
-// app router
+    {
+        path: '/',
+        component: Layout,
+        redirect: '/dashboard',
+        name: '首页',
+        children: [
+            {
+                path: 'dashboard',
+                component: Dashboard,
+                meta: {title: '主页'}
+            }]
+    },
+
+    {
+        path: '/admin',
+        component: Layout,
+        redirect: '/auth/user',
+        name: '权限管理',
+        meta: {title: '权限管理'},
+        children: [
+            {
+                path: 'user',
+                name: '用户管理',
+                component: User,
+                meta: {title: '用户管理'}
+            },
+            {
+                path: 'role',
+                name: '角色管理',
+                component: Role,
+                meta: {title: '角色管理'}
+            },
+            {
+                path: 'menu',
+                name: '菜单管理',
+                component: Menu,
+                meta: {title: '菜单管理'}
+            }]
+    },
+]
+
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.VITE_PUBLIC_PATH),
-  routes: basicRoutes as unknown as RouteRecordRaw[],
-  strict: true,
-  scrollBehavior: () => ({ left: 0, top: 0 }),
-});
+    history: createWebHistory(process.env.BASE_URL),
+    routes
+})
 
-// reset router
-export function resetRouter() {
-  router.getRoutes().forEach((route) => {
-    const { name } = route;
-    if (name && !WHITE_NAME_LIST.includes(name as string)) {
-      router.hasRoute(name) && router.removeRoute(name);
+//全局路由守卫登录跳转
+router.beforeEach(async (to, from, next) => {
+    document.title = `${to.meta.title}`
+    const token = localStorage.getItem('MIX_TOKEN')
+    let checkFlag = false;
+    // 校验token 是否有效
+    await checkToken().then((response) => {
+        const data = response.data
+        if (data.code != 200) {
+            checkFlag = true
+        }
+    });
+    console.log(checkFlag)
+    if ((!token || checkFlag) && to.path !== '/login') {
+        next('/login')
+    } else {
+        next()
     }
-  });
-}
+})
 
-// config router
-export function setupRouter(app: App<Element>) {
-  app.use(router);
-}
-
-export default router;
+export default router

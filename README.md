@@ -1,47 +1,24 @@
-<div align="center">
+# mix-vue
 
-<h1>MIX VUE</h1>
-</div>
-
-**English** | [中文](./README.zh-CN.md)
-
-## Install and use
-
-- Get the project code
-
-#### github
-
-```bash
-git clone https://github.com/fbljq5/mix-vue.git
+## Project setup
 ```
-
-#### gitee
-
-```bash
-git clone https://gitee.com/RoyLiang/mix-vue.git
-```
-
-- Installation dependencies
-
-```bash
-cd mix-vue
-
 yarn install
-
 ```
 
-- run
-
-```bash
+### Compiles and hot-reloads for development
+```
 yarn serve
 ```
 
-- build
-
-```bash
+### Compiles and minifies for production
+```
 yarn build
 ```
 
-thanks
+### Lints and fixes files
+```
+yarn lint
+```
 
-- [vue-vben-admin](https://vvbin.cn/next/)
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -1,9 +1,19 @@
-import type { App } from 'vue';
-import { createPinia } from 'pinia';
-const store = createPinia();
+import { createStore } from 'vuex'
 
-export function setupStore(app: App<Element>) {
-  app.use(store);
-}
 
-export { store };
+export default createStore({
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+    Login({commit},userInfo){
+      const username = userInfo.username.trim()
+      const password = userInfo.password.trim()
+      
+
+    }
+  },
+  modules: {
+  }
+})
