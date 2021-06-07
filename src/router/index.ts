@@ -70,7 +70,7 @@ router.beforeEach(async (to, from, next) => {
     // 校验token 是否有效
     await checkToken().then((response) => {
         const data = response.data
-        if (data.code != 200) {
+        if (data.code != 0) {
             checkFlag = true
         }
     });

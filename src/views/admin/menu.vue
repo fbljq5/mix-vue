@@ -137,14 +137,13 @@ export default defineComponent({
       pageMenu(param).then((response) => {
         loading.value = false;
         const res = response.data;
-        if (res.code == 200) {
-          let menuList = res.data.list;
+        if (res.code == 0) {
+          let menuList = res.result.list;
           treeData.value = getJsonTree(menuList, 0)
-          console.log("treeData", treeData.value)
           pagination.value.current = param.page;
-          pagination.value.total = res.data.totalSize;
+          pagination.value.total = res.result.totalSize;
         } else {
-          message.error(res.msg);
+          message.error(res.message);
           loading.value = false;
         }
       })

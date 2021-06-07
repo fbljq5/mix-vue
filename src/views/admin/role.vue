@@ -164,13 +164,13 @@ export default defineComponent({
       pageRole(param).then((response) => {
         loading.value = false;
         const res = response.data;
-        if (res.code === 200) {
-          roleList.value = res.data.list;
+        if (res.code === 0) {
+          roleList.value = res.result.list;
           // 重置分页按钮
           pagination.value.current = param.page;
-          pagination.value.total = res.data.totalSize;
+          pagination.value.total = res.result.totalSize;
         } else {
-          message.error(res.data.message);
+          message.error(res.result.message);
           loading.value = false;
         }
       })
@@ -210,7 +210,7 @@ export default defineComponent({
       deleteRole(id).then(response => {
         loading.value = false;
         let res = response.data;
-        if (res.code == 200) {
+        if (res.code == 0) {
           message.success("删除成功");
           //成功，冲重刷列表
           handleQuery({
@@ -219,7 +219,7 @@ export default defineComponent({
           });
         } else {
           //删除失败
-          message.error(res.msg);
+          message.error(res.message);
         }
       })
 
@@ -236,7 +236,7 @@ export default defineComponent({
       }
       promise.then(response => {
         let res = response.data;
-        if (res.code === 200) {
+        if (res.code === 0) {
           message.success("操作成功");
           modalLoading.value = false;
           modelVisible.value = false;
@@ -245,7 +245,7 @@ export default defineComponent({
             pageSize: pagination.value.pageSize,
           });
         } else {
-          message.error(res.msg);
+          message.error(res.message);
           modalLoading.value = false;
         }
       }).catch(err => {
@@ -268,7 +268,7 @@ export default defineComponent({
       switchStatus(record).then(response => {
         console.log(response);
         let res = response.data;
-        if (res.code == 200) {
+        if (res.code == 0) {
           message.success("修改成功")
         } else {
           message.error("修改失败")
@@ -295,8 +295,8 @@ export default defineComponent({
       listMenu(roleId).then(response => {
         console.log(response)
         let res = response.data;
-        if (res.code == 200) {
-          let menuList = res.data;
+        if (res.code == 0) {
+          let menuList = res.result;
           treeData.value = getJsonTree(menuList, 0)
           console.log("treeData", treeData.value)
         } else {
@@ -339,11 +339,11 @@ export default defineComponent({
       assignMenus(roleAssignMenusDTO.value).then(response => {
         console.log(response);
         let res = response.data;
-        if(res.code==200){
+        if(res.code==0){
           message.success("配置成功");
           menuModelVisible.value = false;
         }else{
-          message.error(res.msg);
+          message.error(res.message);
         }
       })
     }

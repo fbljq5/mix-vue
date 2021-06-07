@@ -9,7 +9,7 @@
       >
         <a-dropdown :trigger="['click']">
           <a class="ant-dropdown-link" style="margin-left: 95%">{{
-            userInfo.userName
+            userInfo.username
           }}</a>
           <template #overlay>
             <a-menu>
@@ -36,13 +36,13 @@ export default defineComponent({
     const route = useRoute();
     let userInfo = reactive({
       id: 0,
-      userName: "",
+      username: "",
     });
 
     getUserInfo().then((response) => {
       let user = response.data.data;
       userInfo.id = user.id;
-      userInfo.userName = user.userName;
+      userInfo.username = user.username;
     });
 
     // 退出登录
@@ -54,9 +54,9 @@ export default defineComponent({
           logout().then((response) => {
             console.log(response);
             const res = response.data;
-            if (res.code == 200) {
+            if (res.code == 0) {
               message.success("成功退出登录");
-              localStorage.setItem("MIX_TOKEN", res.data);
+              localStorage.setItem("MIX_TOKEN", res.result);
               router
                 .replace({
                   name: "login",

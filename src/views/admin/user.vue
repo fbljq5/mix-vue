@@ -64,7 +64,7 @@
            :confirm-loading="modalLoading">
     <a-form :model="user" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
       <a-form-item label="用户名">
-        <a-input v-model:value="user.userName"></a-input>
+        <a-input v-model:value="user.username"></a-input>
       </a-form-item>
       <a-form-item label="角色">
         <a-select
@@ -115,11 +115,11 @@ import {Tool} from '@/utils/tool';
 const columns = [
   {
     title: "用户名",
-    dataIndex: "userName",
+    dataIndex: "username",
     sorter: true,
     width: "15%",
     slots: {
-      customRender: "userName",
+      customRender: "username",
     },
   },
   {
@@ -189,15 +189,13 @@ export default defineComponent({
       getUserList(param).then((response) => {
         loading.value = false;
         const res = response.data;
-        console.log(res);
-        if (res.code === 200) {
-          userList.value = res.data.list;
+        if (res.code === 0) {
+          userList.value = res.result.list;
           // 重置分页按钮
           pagination.value.current = param.page;
-          pagination.value.total = res.data.totalSize;
-          console.log(res.totalSize);
+          pagination.value.total = res.result.totalSize;
         } else {
-          message.error(res.data.message);
+          message.error(res.result.message);
         }
       });
     };
@@ -220,7 +218,7 @@ export default defineComponent({
       deleteUser(id).then((response) => {
         console.log(response);
         let res = response.data;
-        if (res.code == 200) {
+        if (res.code == 0) {
           message.success("删除成功");
           //成功，冲重刷列表
           handleQuery({
@@ -229,7 +227,7 @@ export default defineComponent({
           });
         } else {
           //删除失败
-          message.error(res.msg);
+          message.error(res.message);
         }
       });
     };
@@ -249,11 +247,11 @@ export default defineComponent({
       console.log("record", record.id)
       await getRoleList({"userId": record.id}).then(response => {
         let res = response.data;
-        if (res.code == 200) {
-          roleList.value = res.data;
+        if (res.code == 0) {
+          roleList.value = res.result;
           user.value.selectedRoles = [];
-          for (let index in res.data) {
-            let roleTemp = res.data[index];
+          for (let index in res.result) {
+            let roleTemp = res.result[index];
             if (roleTemp.hasRole) {
               user.value.selectedRoles.push(roleTemp.id);
             }
@@ -268,8 +266,8 @@ export default defineComponent({
       roleList.value = getRoleList;
       await getRoleList(null).then(response => {
         let res = response.data;
-        if (res.code == 200) {
-          roleList.value = res.data;
+        if (res.code == 0) {
+          roleList.value = res.result;
         }
       })
     };
@@ -285,7 +283,7 @@ export default defineComponent({
       }
       promise.then(response => {
         let res = response.data;
-        if (res.code === 200) {
+        if (res.code === 0) {
           message.success("操作成功");
           modalLoading.value = false;
           modelVisible.value = false;
@@ -294,7 +292,7 @@ export default defineComponent({
             pageSize: pagination.value.pageSize,
           });
         } else {
-          message.error(res.msg);
+          message.error(res.message);
           modalLoading.value = false;
         }
       }).catch(err => {
@@ -313,20 +311,20 @@ export default defineComponent({
     const showModifyPwd = (record: any) => {
       modifyPwdModelVisible.value = true;
       modifyPwdVO.value.id = record.id;
-      modifyPwdVO.value.username = record.userName;
+      modifyPwdVO.value.username = record.username;
     }
 
     const handleModifyPassword = () => {
       modifyPwd(modifyPwdVO.value).then((response) => {
         console.log("response", response);
         let res = response.data;
-        if (res.code == 200) {
+        if (res.code == 0) {
           modifyPwdModelVisible.value = false;
           message.success("修改成功");
           modifyPwdVO.value.password = ''
           modifyPwdVO.value.username = '';
         } else {
-          message.error(res.msg);
+          message.error(res.message);
         }
       })
     }

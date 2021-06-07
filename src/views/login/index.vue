@@ -76,11 +76,12 @@ export default defineComponent({
       login(state.formInline).then((response) => {
         state.loading = false;
         const res = response.data;
-        if (res.code == 200) {
-          localStorage.setItem("MIX_TOKEN", res.data);
+        console.log("res",res)
+        if (res.code == 0) {
+          localStorage.setItem("MIX_TOKEN", res.result);
           router.push("/");
         }else{
-          message.error(res.msg);
+          message.error(res.message);
         }
       });
     };
