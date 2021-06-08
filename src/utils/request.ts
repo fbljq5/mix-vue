@@ -71,7 +71,7 @@ export class Request {
         console.log('errorRes',res)
         switch (res.status) {
             case 400:
-                message.error(res.result.msg);
+                message.error(res.data.message);
                 break;
             case 401:
                 break;

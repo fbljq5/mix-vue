@@ -63,7 +63,7 @@
   <a-modal v-model:visible="modelVisible" title="用户表单" @ok="handleSaveOrUpdate"
            :confirm-loading="modalLoading">
     <a-form :model="user" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-      <a-form-item label="用户名">
+      <a-form-item label="用户名" required>
         <a-input v-model:value="user.username"></a-input>
       </a-form-item>
       <a-form-item label="角色">
@@ -89,7 +89,7 @@
         <a-input v-model:value="user.remark"></a-input>
       </a-form-item>
 
-      <a-form-item label="密码">
+      <a-form-item label="密码" v-if="isAdd">
         <a-input v-model:value="user.password" type="password"></a-input>
       </a-form-item>
     </a-form>
@@ -235,6 +235,7 @@ export default defineComponent({
     const user = ref()
     const modelVisible = ref(false);
     const modalLoading = ref(false);
+    const isAdd = ref(false);
     const roleList = ref();
     const handleRoleChange = (data: any) => {
       user.value.roleIds = data;
@@ -243,6 +244,7 @@ export default defineComponent({
     const edit = async (record: any) => {
       user.value = "";
       modelVisible.value = true;
+      isAdd.value = false;
       user.value = Tool.copy(record);
       console.log("record", record.id)
       await getRoleList({"userId": record.id}).then(response => {
@@ -256,12 +258,14 @@ export default defineComponent({
               user.value.selectedRoles.push(roleTemp.id);
             }
           }
+          user.value.roleIds =  user.value.selectedRoles;
         }
       })
     };
     //新增
     const add = async () => {
       modelVisible.value = true;
+      isAdd.value = true;
       user.value = {};
       roleList.value = getRoleList;
       await getRoleList(null).then(response => {
@@ -283,6 +287,7 @@ export default defineComponent({
       }
       promise.then(response => {
         let res = response.data;
+        console.log(res)
         if (res.code === 0) {
           message.success("操作成功");
           modalLoading.value = false;
@@ -357,7 +362,8 @@ export default defineComponent({
       showModifyPwd,
       modifyPwdModelVisible,
       modifyPwdVO,
-      handleModifyPassword
+      handleModifyPassword,
+      isAdd
     };
   },
 });
