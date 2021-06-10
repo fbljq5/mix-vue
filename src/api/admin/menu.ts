@@ -42,7 +42,7 @@ export function addMenu(menuAddDTO: any) {
 export function deleteMenu(menuId: number) {
     return Request.axiosInstance({
         url: '/mix-admin/menu/delete/' + menuId,
-        method: 'post'
+        method: 'delete'
     })
 }
 

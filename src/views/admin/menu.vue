@@ -80,7 +80,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from "vue";
 import {Tool} from "@/utils/tool";
-import {pageMenu, updateMenu,addMenu} from "@/api/admin/menu";
+import {pageMenu, updateMenu,addMenu, deleteMenu} from "@/api/admin/menu";
 import {message} from "ant-design-vue";
 import {RotateLeftOutlined  } from '@ant-design/icons-vue';
 
@@ -222,7 +222,17 @@ export default defineComponent({
      */
     const handleDelete = (id: number) => {
       // TODO
-      console.log(id);
+      deleteMenu(id).then(response=>{
+        const res = response.data;
+        if(res.code ==0){
+          message.success("删除成功");
+          handleQuery({});
+        }else{
+           message.error(res.message);
+        }
+      }).catch(err => {
+           message.error(err);
+      })
     };
 
     const handleSaveOrUpdate = () => {
