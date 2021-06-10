@@ -16,8 +16,6 @@
               type="primary"
               @click="
               handleQuery({
-                page: 1,
-                pageSize: pagination.pageSize,
                 menuName: param.name,
               })
             "
@@ -33,7 +31,7 @@
         </a-form-item>
       </a-form>
     </p>
-    <a-table :columns="columns" :data-source="treeData" :row-key='record=>record.id'>
+    <a-table :columns="columns" :data-source="treeData" :row-key='record=>record.id' :pagination="false">
       <template v-slot:icon="{ record } ">
         <div v-text="record.icon">
         </div>
@@ -54,23 +52,41 @@
     </a-table>
   </a-layout-content>
 
+    <a-modal v-model:visible="modelVisible" title="菜单表单" @ok="handleSaveOrUpdate"
+           :confirm-loading="modalLoading">
+      <a-form :model="menu" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+        <a-form-item label="菜单名称" required>
+          <a-input v-model:value="menu.menuName"></a-input>
+        </a-form-item>
+        <a-form-item label="图标">
+          <a-input v-model:value="menu.icon"></a-input>
+        </a-form-item>
+        <a-form-item label="排序">
+          <a-input v-model:value="menu.orderSort"></a-input>
+        </a-form-item>
+
+        <a-form-item label="路由路径">
+          <a-input v-model:value="menu.path"></a-input>
+        </a-form-item>
+
+        <a-form-item label="备注">
+          <a-input v-model:value="menu.remark"></a-input>
+        </a-form-item>
+      </a-form>
+  </a-modal>
+
 </template>
 
 <script lang="ts">
 import {defineComponent, onMounted, ref} from "vue";
 import {Tool} from "@/utils/tool";
-import {pageMenu} from "@/api/admin/menu";
+import {pageMenu, updateMenu,addMenu} from "@/api/admin/menu";
 import {message} from "ant-design-vue";
 import {RotateLeftOutlined  } from '@ant-design/icons-vue';
 
 
 const param = ref();
 const menuList = ref();
-const pagination = ref({
-  current: 1,
-  pageSize: 10,
-  total: 0,
-});
 const loading = ref(false);
 
 const columns = [
@@ -93,16 +109,8 @@ const columns = [
   },
   {
     title: "排序",
-    width: "15%",
+    width: "5%",
     dataIndex: "orderSort",
-  },
-  {
-    title: "状态",
-    width: "10%",
-    dataIndex: "status",
-    slots: {
-      customRender: "status",
-    },
   },
   {
     title: "路由路径",
@@ -111,12 +119,12 @@ const columns = [
   },
   {
     title: "创建时间",
-    width: "20%",
+    width: "15%",
     dataIndex: "gmtCreate",
   },
   {
     title: "操作",
-    width: "15%",
+    width: "10%",
     key: "action",
     slots: {
       customRender: "action",
@@ -131,17 +139,14 @@ export default defineComponent({
     param.value = {};
 
     const handleQuery = (param: any) => {
-      console.log(param)
       menuList.value = [];
       // TODO
       pageMenu(param).then((response) => {
         loading.value = false;
         const res = response.data;
         if (res.code == 0) {
-          let menuList = res.result.list;
+          let menuList = res.result;
           treeData.value = getJsonTree(menuList, 0)
-          pagination.value.current = param.page;
-          pagination.value.total = res.result.totalSize;
         } else {
           message.error(res.message);
           loading.value = false;
@@ -156,6 +161,7 @@ export default defineComponent({
      */
     const getJsonTree = (data: any, parentId: any) => {
       let itemArr = [];
+      console.log(data)
       for (let i = 0; i < data.length; i++) {
         let node = data[i];
         if (node.parentId == parentId) {
@@ -182,14 +188,13 @@ export default defineComponent({
           itemArr.push(newNode);
         }
       }
+      console.log("itemArr",itemArr)
       return itemArr;
     };
 
     const resetForm = () => {
       param.value.name = "";
       handleQuery({
-        page: 1,
-        pageSize: pagination.value.pageSize,
       });
     };
 
@@ -217,25 +222,33 @@ export default defineComponent({
      */
     const handleDelete = (id: number) => {
       // TODO
-
       console.log(id);
     };
 
     const handleSaveOrUpdate = () => {
       modalLoading.value = true;
-      // TODO
+      let promise;
+      if(Tool.isNotEmpty(menu.value.id)){
+        promise = updateMenu(menu.value)
+      }else{
+        promise = addMenu(menu.value)
+      }
+      promise.then(response => {
+        let res = response.data;
+        console.log(res)
+        if (res.code === 0) {
+          message.success("操作成功");
+          modalLoading.value = false;
+          modelVisible.value = false;
+          handleQuery({});
+        } else {
+          message.error(res.message);
+          modalLoading.value = false;
+        }
+      }).catch(err => {
+        modalLoading.value = false;
+      })
     }
-
-    /**
-     * 表格点击页码时触发
-     */
-    const handleTableChange = (pagination: any) => {
-      handleQuery({
-        page: pagination.current,
-        pageSize: pagination.pageSize,
-        roleName: param.value.name,
-      });
-    };
 
     const handleStatusChange = (record: any) => {
       // TODO
@@ -243,21 +256,17 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleQuery({
-        page: 1,
-        pageSize: pagination.value.pageSize,
-      });
+      handleQuery({});
     });
 
     return {
       columns,
       param,
       handleQuery,
-      pagination,
       resetForm,
+      menu,
       menuList,
       loading,
-      handleTableChange,
       modelVisible,
       modalLoading,
       add,
