@@ -20,7 +20,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '创建时间',
-    dataIndex: 'createTime',
+    dataIndex: 'gmtCreate',
     width: 180,
   },
   {
