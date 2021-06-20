@@ -10,7 +10,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '昵称',
-    dataIndex: 'realName',
+    dataIndex: 'nickname',
     width: 120,
   },
   {
@@ -31,7 +31,7 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'account',
+    field: 'username',
     label: '用户名',
     component: 'Input',
     colProps: { span: 8 },
@@ -46,7 +46,7 @@ export const searchFormSchema: FormSchema[] = [
 
 export const accountFormSchema: FormSchema[] = [
   {
-    field: 'account',
+    field: 'username',
     label: '用户名',
     component: 'Input',
     required: true,
