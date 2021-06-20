@@ -28,7 +28,11 @@ export function createPermissionGuard(router: Router) {
     }
 
     const token = userStore.getToken;
-
+    // redirect login page
+    const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
+      path: LOGIN_PATH,
+      replace: true,
+    };
     // token does not exist
     if (!token) {
       // You can access without permission. You need to set the routing meta.ignoreAuth to true
@@ -39,11 +43,6 @@ export function createPermissionGuard(router: Router) {
         next();
         return;
       }
-      // redirect login page
-      const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
-        path: LOGIN_PATH,
-        replace: true,
-      };
       if (to.path) {
         redirectData.query = {
           ...redirectData.query,
@@ -53,6 +52,7 @@ export function createPermissionGuard(router: Router) {
       next(redirectData);
       return;
     }
+
     if (permissionStore.getIsDynamicAddedRoute) {
       next();
       return;

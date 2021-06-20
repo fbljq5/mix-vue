@@ -22,6 +22,11 @@ export function checkStatus(status: number, msg: string): void {
       userStore.setToken(undefined);
       userStore.setSessionTimeout(true);
       break;
+    case 402:
+        error(t('sys.api.errMsg402'));
+        userStore.setToken(undefined);
+        userStore.setSessionTimeout(true);
+        break;
     case 403:
       error(t('sys.api.errMsg403'));
       break;

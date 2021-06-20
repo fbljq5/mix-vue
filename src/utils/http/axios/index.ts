@@ -21,6 +21,7 @@ import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 //import { errorResult } from './const';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { createNow, formatRequestDate } from './helper';
+import { useUserStoreWidthOut } from '/@/store/modules/user';
 
 const globSetting = useGlobSetting();
 const prefix = globSetting.urlPrefix;
@@ -56,19 +57,19 @@ const transform: AxiosTransform = {
     const { code, result, message } = data;
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
-    if (!hasSuccess) {
-      if (message) {
-        // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
-        if (options.errorMessageMode === 'modal') {
-          createErrorModal({ title: t('sys.api.errorTip'), content: message });
-        } else if (options.errorMessageMode === 'message') {
-          createMessage.error(message);
-        }
-      }
-      throw new Error(message);
-      //return errorResult;
-    }
+    // const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
+    // if (!hasSuccess) {
+    //   if (message) {
+    //     // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
+    //     if (options.errorMessageMode === 'modal') {
+    //       createErrorModal({ title: t('sys.api.errorTip'), content: message });
+    //     } else if (options.errorMessageMode === 'message') {
+    //       createMessage.error(message);
+    //     }
+    //   }
+    //   throw new Error(message);
+    //   //return errorResult;
+    // }
     console.log("result",result)
     // 接口请求成功，直接返回结果
     if (code === ResultEnum.SUCCESS) {
@@ -96,6 +97,13 @@ const transform: AxiosTransform = {
       throw new Error(timeoutMsg);
       //return errorResult;
     }
+
+    if(code==ResultEnum.TOKEN_INVALID){
+      const userStore = useUserStoreWidthOut();
+      userStore.setToken(undefined);
+      userStore.setSessionTimeout(true);
+    }
+
     throw new Error(t('sys.api.apiRequestFailed'));
     //return errorResult;
   },
